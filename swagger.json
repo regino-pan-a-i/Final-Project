@@ -1,0 +1,943 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Travel Buddy",
+    "description": "An API for managing your trips!.",
+    "version": "1.0.0"
+  },
+  "host": [
+    "bookstoreapi-k7g3.onrender.com"
+  ],
+  "basePath": "/",
+  "schemes": [
+    "https"
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "summary": "Adds a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{userId}": {
+      "get": {
+        "summary": "Returns a user by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The ID of the user to return",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/user_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates an existing user by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The ID of the user to update",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a user by ID",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "description": "The ID of the user to delete",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "User login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/user_login_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "summary": "User logout",
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          }
+        }
+      }
+    },
+    "/users/pastTrips": {
+      "get": {
+        "summary": "Returns past trips of the logged-in user",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/trip_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/likedTrips": {
+      "get": {
+        "summary": "Returns liked trips of the logged-in user",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/trip_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/futureTrips": {
+      "get": {
+        "summary": "Returns future trips of the logged-in user",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/trip_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips": {
+      "post": {
+        "summary": "Adds a new trip",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/trip_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Returns all trips",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/trip_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{tripId}": {
+      "get": {
+        "summary": "Returns a trip by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to return",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/trip_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Trip not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates an existing trip by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to update",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/trip_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Trip not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes a trip by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to delete",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Trip not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/trips/{tripId}/accommodations": {
+      "post": {
+        "summary": "Adds a new accommodation to a trip",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to add the accommodation to",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/accommodation_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Returns all accommodations for a trip",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to return the accommodations for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/accommodation_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{tripId}/accommodations/{accommodationId}": {
+      "get": {
+        "summary": "Returns an accommodation by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to return the accommodation for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "accommodationId",
+            "in": "path",
+            "description": "The ID of the accommodation to return",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/accommodation_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Accommodation not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates an existing accommodation by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to update the accommodation for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "accommodationId",
+            "in": "path",
+            "description": "The ID of the accommodation to update",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/accommodation_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Accommodation not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes an accommodation by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to delete the accommodation for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "accommodationId",
+            "in": "path",
+            "description": "The ID of the accommodation to delete",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Accommodation not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/trips/{tripId}/activities": {
+      "post": {
+        "summary": "Adds a new activity to a trip",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to add the activity to",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/activity_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Returns all activities for a trip",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to return the activities for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/activity_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/trips/{tripId}/activities/{activityId}": {
+      "get": {
+        "summary": "Returns an activity by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to return the activity for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "description": "The ID of the activity to return",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/activity_response"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Activity not found"
+          }
+        }
+      },
+      "put": {
+        "summary": "Updates an existing activity by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to update the activity for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "description": "The ID of the activity to update",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/activity_body"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Activity not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Deletes an activity by ID",
+        "parameters": [
+          {
+            "name": "tripId",
+            "in": "path",
+            "description": "The ID of the trip to delete the activity for",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          },
+          {
+            "name": "activityId",
+            "in": "path",
+            "description": "The ID of the activity to delete",
+            "required": true,
+            "style": "simple",
+            "explode": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "404": {
+            "description": "Activity not found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "user_response": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pastTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "futureTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "likedTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "user_body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "John Doe"
+          },
+          "email": {
+            "type": "string",
+            "example": "john.doe@example.com"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123"
+          },
+          "role": {
+            "type": "string",
+            "example": "user"
+          },
+          "pastTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["tripId1", "tripId2"]
+          },
+          "futureTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["tripId3"]
+          },
+          "likedTrips": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "example": ["tripId4"]
+          }
+        }
+      },
+      "trip_response": {
+        "type": "object",
+        "properties": {
+          "tripId": {
+            "type": "string"
+          },
+          "destination": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "trip_body": {
+        "type": "object",
+        "properties": {
+          "destination": {
+            "type": "string",
+            "example": "Paris"
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-07-01"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-07-10"
+          }
+        }
+      },
+      "accommodation_response": {
+        "type": "object",
+        "properties": {
+          "accommodationId": {
+            "type": "string"
+          },
+          "tripId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "checkInDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "checkOutDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "accommodation_body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Hotel XYZ"
+          },
+          "address": {
+            "type": "string",
+            "example": "123 Main St, Paris"
+          },
+          "checkInDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-07-01"
+          },
+          "checkOutDate": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-07-10"
+          }
+        }
+      },
+      "activity_response": {
+        "type": "object",
+        "properties": {
+          "activityId": {
+            "type": "string"
+          },
+          "tripId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "time": {
+            "type": "string",
+            "format": "time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "activity_body": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Eiffel Tower Visit"
+          },
+          "type": {
+            "type": "string",
+            "example": "Sightseeing"
+          },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "example": "2024-07-02"
+          },
+          "time": {
+            "type": "string",
+            "format": "time",
+            "example": "10:00"
+          }
+        }
+      }
+    }
+  }
+}
