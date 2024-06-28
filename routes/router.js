@@ -21,6 +21,8 @@ const userRouter = require('./userRouter.js')
 * **************************************/
 
 
+router.use('/user', userRouter)
+
 
 
 module.exports = router;
