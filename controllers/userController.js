@@ -8,7 +8,7 @@ const authController = {};
 
 authController.register = async (req, res, next) => {
     try {
-        await connect();
+        await connect.connectToDatabase();
         console.log(req.body);
         const { firstName, lastName, email, password } = req.body;
         const hashedPassword = await bcrypt.hash(password, 10);
@@ -34,7 +34,7 @@ authController.register = async (req, res, next) => {
 
 authController.login = async (req, res, next) => {
     try{
-        await connect();
+        await connect.connectToDatabase();
         passport.authenticate('local', (err, user, info) => {
             if (err) {
                 console.log(err)
