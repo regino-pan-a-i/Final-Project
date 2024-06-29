@@ -1,4 +1,4 @@
-const User = require('../database/models/user');
+/*const User = require('../database/models/user');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const connect = require('../database/connect');
@@ -78,3 +78,4 @@ authController.logout = async (req, res, next) => {
     });
 }
 module.exports = authController;
+*/
