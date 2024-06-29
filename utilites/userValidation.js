@@ -2,7 +2,7 @@ const {body, validationResult} = require('express-validator');
 validate = {}
 validate.userRules = () => {
     return [
-        body('firstName')
+        body('name')
             .trim()
             .escape()
             .notEmpty()
@@ -10,15 +10,6 @@ validate.userRules = () => {
             .isLength({ min: 1 })
             .withMessage('First name must be at least 1 character long.')
             .isString(),
-
-        body('lastName')
-            .trim()
-            .escape()
-            .notEmpty()
-            .withMessage('Please provide a valid first name.')
-            .isString()
-            .isLength({ min: 2 })
-            .withMessage('Last name must be at least 2 characters long.'),
 
         body('email')
             .trim()
@@ -49,6 +40,7 @@ validate.validate = (req, res, next) => {
     console.log('Validating user data');
     const errors = validationResult(req);
     if (errors.isEmpty()) {
+        console.log('No validation errors found');
         return next();
     }
     const extractedErrors = errors.array().map(err => ({

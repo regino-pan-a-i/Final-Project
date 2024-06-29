@@ -9,9 +9,7 @@ const utilHandler = require('../utilites/index')
 /*****************************
  * Routes
  * **************************/
-
-
-router.get('/', utilHandler.handleErrors(userController.getUsers))
+router.get('/', (req, res, next) => userController.getUsers(req, res, next))
 router.get('/:id',utilHandler.handleErrors(userController.getUserById))
 router.post('/', util.userRules(), util.validate, utilHandler.handleErrors(userController.createUser))
 router.put('/:id', util.userRules(), util.validate,utilHandler.handleErrors(userController.updateUser))
