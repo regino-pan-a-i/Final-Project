@@ -1,5 +1,7 @@
+/*const User = require('../database/models/user');
+const bcrypt = require('bcryptjs');
+const passport = require('passport');
 const connect = require('../database/connect');
-const User = require('../database/models/user');
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 
@@ -65,8 +67,5 @@ Controller.createUser = async (req, res, next) => {
         mongoose.disconnect();
     }
 }
-
-
-
-
-module.exports = Controller;
+module.exports = authController;
+*/

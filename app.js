@@ -8,7 +8,7 @@
  * ********************************/
 const express = require('express');
 const bodyParser = require('body-parser');
-const { connectToDatabase } = require('./database/connect');
+const mongodb = require('./database/connect');
 const app = express();
 
 
@@ -29,16 +29,11 @@ app
  * ********************************/
 const port = process.env.PORT || 8080;
 
-async function startServer() {
-  try {
-    await connectToDatabase();
-    app.listen(port, () => {
-      console.log(`Server is running on port ${port}`);
-    });
-  } catch (error) {
-    console.error('Failed to connect to the database:', error);
-    process.exit(1); // Exit the process with an error code
+mongodb.initDb((err, mongodb) => {
+  if (err) {
+    console.log(err);
+  } else {
+    app.listen(port);
+    console.log(`Connected to DB and listening on ${port}`);
   }
-}
-
-startServer();
+});
