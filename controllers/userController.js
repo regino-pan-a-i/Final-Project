@@ -1,18 +1,18 @@
-/*const User = require('../database/models/user');
+const mongodb = require('../database/connect');
+const ObjectId = require('mongodb').ObjectId;
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const connect = require('../database/connect');
-const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
+// const bcrypt = require('bcryptjs');
 
 var Controller = {}
 
 
 Controller.getUsers = async (req, res, next) => {
     try {
-        await connect.connectToDatabase();
-        const users = await User.find();
-        res.status(200).send(users);
+        const result = await mongodb.getDb().db('travel-buddy').collection('users').find();;
+        const users = await result.toArray();
+        console.log(users)
+        res.status(200).json(users);
     }
     catch (error){
         const err = new Error(error.message);
@@ -20,41 +20,40 @@ Controller.getUsers = async (req, res, next) => {
         err.statusCode = 500;
         res.json(err);
     }
-    finally {
-        mongoose.disconnect();
-    }
 }
-Controller.getUserById = async (req, res, next) => {
-    console.log(req.params.id)
-    try{
-        await connect.connectToDatabase();
 
-        const user = await User.findById(req.params.id).exec();
-        res.json(user)
-    }catch (error){
-        console.log(error);
-        const err = new Error(error.message);
-        err.status = "fail";
-        err.statusCode = 500;
-        res.json(err);
-    }
-    finally {
-        mongoose.disconnect();
-    }
+// Controller.getUserById = async (req, res, next) => {
+//     console.log(req.params.id)
+//     try{
+//         await connect.connectToDatabase();
 
-}
+//         const user = await User.findById(req.params.id).exec();
+//         res.json(user)
+//     }catch (error){
+//         console.log(error);
+//         const err = new Error(error.message);
+//         err.status = "fail";
+//         err.statusCode = 500;
+//         res.json(err);
+//     }
+//     finally {
+//         mongoose.disconnect();
+//     }
+
+// }
 
 Controller.createUser = async (req, res, next) => {
     console.log(req.body)
     try{
-        await connect.connectToDatabase();
-        const user = new User({
+        const usersCollection = await mongodb.getDb().db('travel-buddy').collection('users')
+        const result = await usersCollection.insertOne({
             name: req.body.name,
             email: req.body.email,
-            password: await bcrypt.hash(req.body.password, 10)
+            password: await bcrypt.hash(req.body.password, 10),
+            createdAt: new Date(),
+            updatedAt: new Date()
         })
-        const savedUser = await user.save();    
-        res.status(201).send(`This is the ID for the new user: ${savedUser._id}`);
+        res.status(201).send(`This is the ID for the new user: ${result.insertedId}`);
     }
     catch (error){
         console.log(error);
@@ -67,5 +66,4 @@ Controller.createUser = async (req, res, next) => {
         mongoose.disconnect();
     }
 }
-module.exports = authController;
-*/
+module.exports = Controller;

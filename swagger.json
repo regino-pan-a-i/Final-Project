@@ -36,6 +36,26 @@
         }
       }
     },
+    "/users/":{
+      "get": {
+        "summary": "Returns all users",
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/user_response"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/users/{userId}": {
       "get": {
         "summary": "Returns a user by ID",
@@ -778,7 +798,8 @@
             },
             "example": ["tripId4"]
           }
-        }
+        },
+        "required": ["name", "email", "password"]
       },
       "trip_response": {
         "type": "object",
