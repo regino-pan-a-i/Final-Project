@@ -4,7 +4,7 @@ const ObjectId = require('mongodb').ObjectId;
 
 const getAllTrips = async (req, res) => {
     try {
-        const result = await mongodb.db('travel-buddy').collection('trips').find();
+        const result = await mongodb.getDb().db('travel-buddy').collection('trips').find();
         const trips = await result.toArray();
         res.setHeader('Content-Type', 'application/json');
         res.status(200).json(trips);
