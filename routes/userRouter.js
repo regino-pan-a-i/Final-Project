@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router()
 const userController = require('../controllers/userController')
-const util = require('../utilities/userValidation')
-const utilHandler = require('../utilities/index')
+const util = require('../utilites/userValidation')
+const utilHandler = require('../utilites/index')
 // const auth = require('../utilities/auth');
 
 
