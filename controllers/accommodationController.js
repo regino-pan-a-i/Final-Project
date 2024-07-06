@@ -1,7 +1,5 @@
 const { response } = require('express');
 const mongodb = require('../database/connect');
-const { check } = require('express-validator');
-const { checkout } = require('../routes/tripRouter');
 const ObjectId = require('mongodb').ObjectId;
 
 const addAccommodation = async (req, res) => {

@@ -3,6 +3,7 @@ const router = express.Router();
 
 const tripController = require('../controllers/tripsController');
 const acmController = require('../controllers/accommodationController');
+const actController = require('../controllers/activityController');
 
 // Add a new trip
 router.post('/', tripController.addTrip);
@@ -35,5 +36,22 @@ router.put('/accommodations/:id', acmController.updateAccommodation);
 
 // Delete an accomodation
 router.delete('/accommodations/:id', acmController.deleteAccommodation);
+
+/* Activity routes */
+
+// Add a new activity
+router.post('/:id/activities', actController.addActivity);
+
+// Get all activities in a trip
+router.get('/:id/activities', actController.getAllActivitiesInTrip);
+
+// Get an activity by ID
+router.get('/activities/:id', actController.getActivityById);
+
+// Update an activity
+router.put('/activities/:id', actController.updateActivity);
+
+// Delete an activity
+router.delete('/activities/:id', actController.deleteActivity);
 
 module.exports = router;

@@ -576,18 +576,10 @@
         }
       }
     },
-    "/trips/{tripId}/activities/{activityId}": {
+    "/trips/activities/{activityId}": {
       "get": {
         "summary": "Returns an activity by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to return the activity for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "activityId",
             "in": "path",
@@ -616,14 +608,6 @@
       "put": {
         "summary": "Updates an existing activity by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to update the activity for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "activityId",
             "in": "path",
@@ -658,14 +642,6 @@
       "delete": {
         "summary": "Deletes an activity by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to delete the activity for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "activityId",
             "in": "path",
