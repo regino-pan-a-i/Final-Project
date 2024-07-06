@@ -427,18 +427,10 @@
         }
       }
     },
-    "/trips/{tripId}/accommodations/{accommodationId}": {
+    "/trips/accommodations/{accommodationId}": {
       "get": {
         "summary": "Returns an accommodation by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to return the accommodation for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "accommodationId",
             "in": "path",
@@ -467,14 +459,6 @@
       "put": {
         "summary": "Updates an existing accommodation by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to update the accommodation for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "accommodationId",
             "in": "path",
@@ -509,14 +493,6 @@
       "delete": {
         "summary": "Deletes an accommodation by ID",
         "parameters": [
-          {
-            "name": "tripId",
-            "in": "path",
-            "description": "The ID of the trip to delete the accommodation for",
-            "required": true,
-            "style": "simple",
-            "explode": false
-          },
           {
             "name": "accommodationId",
             "in": "path",
