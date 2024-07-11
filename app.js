@@ -14,6 +14,7 @@ const static = require('./routes/static');
 const app = express();
 
 
+
 /***********************************
  * Middleware
  * ********************************/

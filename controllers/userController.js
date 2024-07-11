@@ -173,6 +173,33 @@ Controller.getLikedTrips = async (req, res, next) => {
     }
 }
 
+Controller.deleteLikedTrip = async (req, res, next) => {
+    try{
+        const likedTripsCollection = await mongodb.getDb()
+            .db('travel-buddy')
+            .collection('likedTrips')
+
+        // Find and delete the liked trip
+        const result = await likedTripsCollection.deleteOne({ tripID: req.params.tripId, userID: new ObjectId(req.params.id)});
+        
+        // Check if the trip was deleted
+        if(result.deletedCount === 0){
+            res.status(404).send('Liked trip not found');
+        }
+        else{
+            
+            return res.json({ message: 'Trip deleted' })
+        }
+    }catch (error){
+        console.log(error);
+        const err = new Error(error.message);
+        err.status = "fail";
+        err.message = error.message;
+        err.statusCode = 500;
+        res.json(err);
+    }
+}
+
 Controller.addPastTrip = async (req, res, next) => {
 
     try{
@@ -248,7 +275,34 @@ Controller.getPastTrips = async (req, res, next) => {
     }
 }
 
-Controller.addfutureTrip = async (req, res, next) => {
+Controller.deletePastTrip = async (req, res, next) => {
+    try{
+        const pastTripsCollection = await mongodb.getDb()
+            .db('travel-buddy')
+            .collection('pastTrips')
+
+        // Find and delete the past trip
+        const result = await pastTripsCollection.deleteOne({ tripID: req.params.tripId, userID: new ObjectId(req.params.id)});
+        
+        // Check if the trip was deleted
+        if(result.deletedCount === 0){
+            res.status(404).send('Past trip not found');
+        }
+        else{
+            
+            return res.json({ message: 'Trip deleted' })
+        }
+    }catch (error){
+        console.log(error);
+        const err = new Error(error.message);
+        err.status = "fail";
+        err.message = error.message;
+        err.statusCode = 500;
+        res.json(err);
+    }
+}
+
+Controller.addFutureTrip = async (req, res, next) => {
 
     try{
         // Get Trip ID from request body
@@ -278,7 +332,7 @@ Controller.addfutureTrip = async (req, res, next) => {
     }
 }
 
-Controller.getfutureTrips = async (req, res, next) => {
+Controller.getFutureTrips = async (req, res, next) => {
     try{
         // Create an instance of the futureTrips collection
         const futureTripsCollection = await mongodb.getDb()
@@ -322,4 +376,33 @@ Controller.getfutureTrips = async (req, res, next) => {
         res.json(err);
     }
 }
+
+Controller.deleteFutureTrip = async (req, res, next) => {
+    try{
+        const futureTripsCollection = await mongodb.getDb()
+            .db('travel-buddy')
+            .collection('futureTrips')
+
+        // Find and delete the future trip
+        const result = await futureTripsCollection.deleteOne({ tripID: req.params.tripId, userID: new ObjectId(req.params.id)});
+        
+        // Check if the trip was deleted
+        if(result.deletedCount === 0){
+            res.status(404).send('Future trip not found');
+        }
+        else{
+            
+            return res.json({ message: 'Trip deleted' })
+        }
+    }catch (error){
+        console.log(error);
+        const err = new Error(error.message);
+        err.status = "fail";
+        err.message = error.message;
+        err.statusCode = 500;
+        res.json(err);
+    }
+}
+
+
 module.exports = Controller;

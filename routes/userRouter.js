@@ -14,8 +14,8 @@ const utilHandler = require('../utilities/index')
 // Route to retrieve all users
 router.get('/', utilHandler.handleErrors(userController.getUsers))
 
-// Landing page after login
-router.get('/home', utilHandler.handleErrors(userController.getHome))
+// // Landing page after login
+// router.get('/home', utilHandler.handleErrors(userController.getHome))
 
 // Route to retrieve a user by ID
 router.get('/:id',utilHandler.handleErrors(userController.getUserById))
@@ -34,4 +34,27 @@ router.get('/:id/likedTrips', utilHandler.handleErrors(userController.getLikedTr
 
 // Route to add a liked trip to user
 router.post('/:id/likedTrips', utilHandler.handleErrors(userController.addLikedTrip))
+
+// Route to remove a liked trip from user
+router.delete('/:id/likedTrips/:tripId', utilHandler.handleErrors(userController.deleteLikedTrip))
+
+// Route to get all past trips by a user
+router.get('/:id/pastTrips', utilHandler.handleErrors(userController.getPastTrips))
+
+// Route to add a past trip to user
+router.post('/:id/pastTrips', utilHandler.handleErrors(userController.addPastTrip))
+
+// Route to remove a past trip from user
+router.delete('/:id/pastTrips/:tripId', utilHandler.handleErrors(userController.removePastTrip))
+
+// Route to get all future trips by a user
+router.get('/:id/futureTrips', utilHandler.handleErrors(userController.getFutureTrips))
+
+// Route to add a future trip to user
+router.post('/:id/futureTrips', utilHandler.handleErrors(userController.addFutureTrip))
+
+// Route to remove a future trip from user
+router.delete('/:id/futureTrips/:tripId', utilHandler.handleErrors(userController.removeFutureTrip))
+
+
 module.exports = router;
