@@ -12,6 +12,11 @@ const mongodb = require('./database/connect');
 const expressLayouts = require("express-ejs-layouts")
 const static = require('./routes/static');
 const app = express();
+const { auth } = require('express-openid-connect');
+const { requiresAuth } = require('express-openid-connect');
+const dotenv = require('dotenv');
+dotenv.config();
+
 
 
 
@@ -54,4 +59,49 @@ mongodb.initDb((err, mongodb) => {
     app.listen(port);
     console.log(`Connected to DB and listening on ${port}`);
   }
+})
+
+/***********************************
+ * User Authentication
+ * ********************************/
+
+const config = {
+  authRequired: false,
+  auth0Logout: true,
+  secret: process.env.SECRET,
+  baseURL: process.env.BASEURL,
+  clientID: process.env.CLIENTID,
+  issuerBaseURL: process.env.ISSUERBASEURL,
+ };
+
+// auth router attaches /login, /logout, and /callback routes to the baseURL
+app.use(auth(config));
+
+// req.isAuthenticated is provided from the auth router
+app.get('/', (req, res) => {
+  res.send(req.oidc.isAuthenticated() ? 'Logged in' : 'Logged out');
 });
+
+//log user in Mongodb
+app.get('/profile', requiresAuth(), async (req, res) => {
+  const email = await mongodb.getDb().db('travel-buddy')
+  .collection('users')
+  .findOne({email: req.oidc.user.email});
+ if (!email){
+  const userRecords = await mongodb.getDb()
+  .db('travel-buddy')
+  .collection('users');
+  const result = await userRecords.insertOne( {
+    name: req.oidc.user.name,
+    email: req.oidc.user.email,
+    password: req.oidc.user.password});
+    res.send("User created");}
+    else{
+      res.send(JSON.stringify(req.oidc.user));
+    }
+  });
+
+
+
+
+
