@@ -9,11 +9,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongodb = require('./database/connect');
+const expressLayouts = require("express-ejs-layouts")
+const static = require('./routes/static');
 const app = express();
 const { auth } = require('express-openid-connect');
 const { requiresAuth } = require('express-openid-connect');
 const dotenv = require('dotenv');
 dotenv.config();
+
 
 
 
@@ -27,7 +30,22 @@ app
     res.setHeader('Access-Control-Allow-Origin', '*');
     next();
   })
-  .use('/', require('./routes'));
+
+
+/* ***********************
+ * View Engine and Templates
+ *************************/
+app.set("view engine", "ejs")
+app.use(expressLayouts)
+app.set("layout", "./layouts/layout") // not at views root
+
+
+/********************
+ * Routes
+ ********************/
+app.use(static)
+
+app.use('/', require('./routes'));
 
 /***********************************
  * Server Listener

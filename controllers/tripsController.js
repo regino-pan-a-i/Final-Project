@@ -15,7 +15,9 @@ const addTrip = async (req, res) => {
         const trip = {
             destination,
             startDate,
-            endDate
+            endDate,
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         const result = await mongodb.getDb().db('travel-buddy').collection('trips').insertOne(trip);

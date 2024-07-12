@@ -18,7 +18,9 @@ const addActivity = async (req, res) => {
             name,
             type,
             date,
-            time
+            time,
+            createdAt: new Date(),
+            updatedAt: new Date()
         };
 
         const result = await mongodb.getDb().db('travel-buddy').collection('activities').insertOne(activity);
