@@ -10,7 +10,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongodb = require('./database/connect');
 const expressLayouts = require("express-ejs-layouts")
-const static = require('./routes/static');
+const staticRoutes = require('./routes/static');
 const app = express();
 const { auth } = require('express-openid-connect');
 const { requiresAuth } = require('express-openid-connect');
@@ -43,7 +43,7 @@ app.set("layout", "./layouts/layout") // not at views root
 /********************
  * Routes
  ********************/
-app.use(static)
+app.use(staticRoutes);
 
 app.use('/', require('./routes'));
 
@@ -101,7 +101,7 @@ app.get('/profile', requiresAuth(), async (req, res) => {
     }
   });
 
-
+  module.exports = app;
 
 
 
