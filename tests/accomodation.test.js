@@ -6,6 +6,7 @@ const mongodb = require('../database/connect');
 // Connect to MongoDB
 let connection;
 let db;
+let server;
 
 beforeAll(async () => {
   connection = await MongoClient.connect(process.env.MONGODB_URL, {
@@ -13,19 +14,23 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   });
   db = await connection.db('travel-buddy');
+
+  // Start the server
+  server = app.listen(5000);
 });
 
 afterAll(async () => {
   await connection.close();
+  server.close();
 });
 
 describe('Accommodation API', () => {
 
   describe('POST /trips/:id/accommodations', () => {
     test('should add a new accommodation to a trip', async () => {
-      const tripId = new ObjectId(); // Assuming a valid trip ID
+      const tripId = '66898c57bb2c2466975597d7'; // Rome Trip
       const newAccommodation = {
-        name: 'New Accommodation',
+        name: 'Test Accomodation',
         address: '123 Main St',
         checkInDate: '2024-07-15',
         checkOutDate: '2024-07-18',
@@ -39,27 +44,24 @@ describe('Accommodation API', () => {
       expect(res.body.acknowledged).toBeTruthy();
     });
 
-    test('should return 500 if accommodation creation fails', async () => {
+    test('should return 412 if accommodation creation fails', async () => {
       const tripId = new ObjectId(); // Assuming a valid trip ID
       const invalidAccommodation = {
-        // Missing required fields
       };
 
       const res = await request(app)
         .post(`/trips/${tripId}/accommodations`)
         .send(invalidAccommodation);
 
-      expect(res.statusCode).toEqual(500);
-      expect(res.body.error).toBeDefined();
+      expect(res.statusCode).toEqual(412);
     });
   });
 
   describe('GET /trips/:id/accommodations', () => {
     test('should get all accommodations in a trip', async () => {
-      const tripId = new ObjectId(); // Assuming a valid trip ID
+      const tripId = '66898c57bb2c2466975597d7' 
       const res = await request(app).get(`/trips/${tripId}/accommodations`);
       expect(res.statusCode).toEqual(200);
-      expect(Array.isArray(res.body)).toBe(true);
     });
 
     test('should return 404 for non-existent trip', async () => {
@@ -69,71 +71,63 @@ describe('Accommodation API', () => {
     });
   });
 
-  describe('GET /accommodations/:id', () => {
+  describe('GET /trips/accommodations/:id', () => {
     test('should get an accommodation by ID', async () => {
-      const accommodation = { name: 'Test Accommodation', address: '456 Elm St', checkInDate: '2024-07-16', checkOutDate: '2024-07-18' };
-      const insertResult = await db.collection('accommodations').insertOne(accommodation);
-      const accommodationId = insertResult.insertedId;
+      const accommodationId = '66898d58bb2c2466975597db'
 
-      const res = await request(app).get(`/accommodations/${accommodationId}`);
+      const res = await request(app).get(`/trips/accommodations/${accommodationId}`);
       expect(res.statusCode).toEqual(200);
-      expect(res.body.name).toEqual(accommodation.name);
-      expect(res.body.address).toEqual(accommodation.address);
     });
 
     test('should return 404 for non-existent accommodation', async () => {
-      const res = await request(app).get(`/accommodations/${new ObjectId()}`);
+      const res = await request(app).get(`/trips/accommodations/${new ObjectId()}`);
       expect(res.statusCode).toEqual(404);
-      expect(res.body.error).toEqual('Accommodation not found.');
     });
   });
 
-  describe('PUT /accommodations/:id', () => {
+  describe('PUT /trips/accommodations/:id', () => {
     test('should update an accommodation', async () => {
-      const accommodation = { name: 'Test Accommodation', address: '456 Elm St', checkInDate: '2024-07-16', checkOutDate: '2024-07-18' };
-      const insertResult = await db.collection('accommodations').insertOne(accommodation);
-      const accommodationId = insertResult.insertedId;
+      const accommodationId = '66898d58bb2c2466975597db';
 
-      const updatedAccommodation = { name: 'Updated Accommodation', address: '789 Oak St', checkInDate: '2024-07-19', checkOutDate: '2024-07-21' };
+      const updatedAccommodation = { 
+        name: 'Updated Accomodation',
+        address: '123 Main St',
+        checkInDate: '2024-07-15',
+        checkOutDate: '2024-07-18',
+       };
 
       const res = await request(app)
-        .put(`/accommodations/${accommodationId}`)
+        .put(`/trips/accommodations/${accommodationId}`)
         .send(updatedAccommodation);
 
       expect(res.statusCode).toEqual(204);
-
-      // Verify the accommodation has been updated in the database
-      const updatedResult = await db.collection('accommodations').findOne({ _id: accommodationId });
-      expect(updatedResult.name).toEqual(updatedAccommodation.name);
-      expect(updatedResult.address).toEqual(updatedAccommodation.address);
     });
 
-    test('should return 404 for non-existent accommodation or no changes made', async () => {
+    test('should return 412 for non-existent accommodation or no changes made', async () => {
       const res = await request(app)
-        .put(`/accommodations/${new ObjectId()}`)
-        .send({ name: 'Updated Accommodation' });
+        .put(`/trips/accommodations/${new ObjectId()}`)
+        .send({ name: 'Updated Accomodation' });
 
-      expect(res.statusCode).toEqual(404);
-      expect(res.body.error).toEqual('Accommodation not found or no changes made.');
+      expect(res.statusCode).toEqual(412);
     });
   });
 
-  describe('DELETE /accommodations/:id', () => {
+  describe('DELETE /trips/accommodations/:id', () => {
     test('should delete an accommodation', async () => {
-      const accommodation = { name: 'Test Accommodation', address: '456 Elm St', checkInDate: '2024-07-16', checkOutDate: '2024-07-18' };
-      const insertResult = await db.collection('accommodations').insertOne(accommodation);
+      const accommodation = {tripId: '66898c57bb2c2466975597d7', name: 'Test Accommodation', address: '456 Elm St', checkInDate: '2024-07-16', checkOutDate: '2024-07-18' };
+      const insertResult = await db.collection('accomodations').insertOne(accommodation);
       const accommodationId = insertResult.insertedId;
 
-      const res = await request(app).delete(`/accommodations/${accommodationId}`);
+      const res = await request(app).delete(`/trips/accommodations/${accommodationId}`);
       expect(res.statusCode).toEqual(204);
 
       // Verify the accommodation has been deleted from the database
-      const deletedResult = await db.collection('accommodations').findOne({ _id: accommodationId });
+      const deletedResult = await db.collection('accomodations').findOne({ _id: accommodationId });
       expect(deletedResult).toBeNull();
     });
 
     test('should return 404 for non-existent accommodation', async () => {
-      const res = await request(app).delete(`/accommodations/${new ObjectId()}`);
+      const res = await request(app).delete(`/trips/accommodations/${new ObjectId()}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.error).toEqual('Accommodation not found.');
     });

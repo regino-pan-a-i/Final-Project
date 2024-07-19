@@ -53,6 +53,26 @@ Controller.getUserById = async (req, res, next) => {
 
 }
 
+Controller.updateUser = async (req, res, next) => {
+    try {
+        const userId = new ObjectId(req.params.id);
+        const updatedUser = {
+            name: req.body.name,
+            email: req.body.email,
+            password: await bcrypt.hash(req.body.password, 10),
+            updatedAt: new Date()
+        };
+        const result = await mongodb.getDb().db('travel-buddy').collection('users').replaceOne({ _id: userId }, updatedUser);
+        if (result.modifiedCount > 0) {
+            res.status(204).send();
+        } else {
+            res.status(404).json({ error: 'User not found or no changes made.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'An error occurred while updating the user.' });
+    }
+}
+
 Controller.createUser = async (req, res, next) => {
     try{
         const usersCollection = await mongodb.getDb()

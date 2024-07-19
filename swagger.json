@@ -566,15 +566,41 @@
             "in": "path",
             "required": true,
             "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "Example User"
+                },
+                "email": {
+                  "example": "example@gmail.com"
+                },
+                "password": {
+                  "example": "Example123!User"
+                },
+                "updatedAt": {
+                  "example": "2020-12-01T00:00:00.000Z"
+                }
+              }
+            }
           }
         ],
         "responses": {
-          "400": {
-            "description": "Bad Request"
+          "204": {
+            "description": "No Content"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
-      },
-      "delete": {
+      },      "delete": {
         "description": "",
         "parameters": [
           {

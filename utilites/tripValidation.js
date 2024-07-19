@@ -23,11 +23,8 @@ validate = {};
 
 validate.saveAcm = (req, res, next) => {
   const validationRule = {
-    tripId: 'required|string',
     name: 'required|string',
     address: 'required|string',
-    checkInTime: 'required|string',
-    checkOutTime: 'required|string',
   };
   validator(req.body, validationRule, {}, (err, status) => {
     if (!status) {
@@ -44,7 +41,6 @@ validate.saveAcm = (req, res, next) => {
 
 validate.saveAct = (req, res, next) => {
     const validationRule = {
-      tripId: 'required|int',
       name: 'required|string',
       type: 'required|string',
       date: 'required|string',

@@ -41,7 +41,6 @@ app
 /********************
  * Routes
  ********************/
-app.use(staticRoutes);
 
 app.use('/', require('./routes'));
 

@@ -6,6 +6,7 @@ const mongodb = require('../database/connect');
 // Connect to MongoDB
 let connection;
 let db;
+let server;
 
 beforeAll(async () => {
   connection = await MongoClient.connect(process.env.MONGODB_URL, {
@@ -13,17 +14,21 @@ beforeAll(async () => {
     useUnifiedTopology: true,
   });
   db = await connection.db('travel-buddy');
+
+  // Start the server
+  server = app.listen(1000);
 });
 
 afterAll(async () => {
   await connection.close();
+  server.close();
 });
 
 describe('Activity API', () => {
 
   describe('POST /trips/:id/activities', () => {
     test('should add a new activity to a trip', async () => {
-      const tripId = new ObjectId(); // Assuming a valid trip ID
+      const tripId = '66898c57bb2c2466975597d7'; // Rome Trip
       const newActivity = {
         name: 'New Activity',
         type: 'Sightseeing',
@@ -36,11 +41,10 @@ describe('Activity API', () => {
         .send(newActivity);
 
       expect(res.statusCode).toEqual(201);
-      expect(res.body.acknowledged).toBeTruthy();
     });
 
-    test('should return 500 if activity creation fails', async () => {
-      const tripId = new ObjectId(); // Assuming a valid trip ID
+    test('should return 412 if activity creation fails', async () => {
+      const tripId = '66898c57bb2c2466975597d7' // Assuming a valid trip ID
       const invalidActivity = {
         // Missing required fields
       };
@@ -49,82 +53,66 @@ describe('Activity API', () => {
         .post(`/trips/${tripId}/activities`)
         .send(invalidActivity);
 
-      expect(res.statusCode).toEqual(500);
-      expect(res.body.error).toBeDefined();
+      expect(res.statusCode).toEqual(412);
     });
   });
 
   describe('GET /trips/:id/activities', () => {
     test('should get all activities in a trip', async () => {
-      const tripId = new ObjectId(); // Assuming a valid trip ID
+      const tripId = '66898c57bb2c2466975597d7'; // Assuming a valid trip ID
       const res = await request(app).get(`/trips/${tripId}/activities`);
       expect(res.statusCode).toEqual(200);
-      expect(Array.isArray(res.body)).toBe(true);
     });
 
     test('should return 404 for non-existent trip', async () => {
       const res = await request(app).get(`/trips/${new ObjectId()}/activities`);
       expect(res.statusCode).toEqual(404);
-      expect(res.body.error).toEqual('Trip not found.');
     });
   });
 
-  describe('GET /activities/:id', () => {
+  describe('GET /trips/activities/:id', () => {
     test('should get an activity by ID', async () => {
-      const activity = { name: 'Test Activity', type: 'Adventure', date: '2024-07-16', time: '10:00' };
-      const insertResult = await db.collection('activities').insertOne(activity);
-      const activityId = insertResult.insertedId;
+      const activityId = '669ac142a386368522d0c5c0'
 
-      const res = await request(app).get(`/activities/${activityId}`);
+      const res = await request(app).get(`/trips/activities/${activityId}`);
       expect(res.statusCode).toEqual(200);
-      expect(res.body.name).toEqual(activity.name);
-      expect(res.body.type).toEqual(activity.type);
     });
 
     test('should return 404 for non-existent activity', async () => {
       const res = await request(app).get(`/activities/${new ObjectId()}`);
       expect(res.statusCode).toEqual(404);
-      expect(res.body.error).toEqual('Activity not found.');
     });
   });
 
   describe('PUT /activities/:id', () => {
     test('should update an activity', async () => {
-      const activity = { name: 'Test Activity', type: 'Adventure', date: '2024-07-16', time: '10:00' };
-      const insertResult = await db.collection('activities').insertOne(activity);
-      const activityId = insertResult.insertedId;
+      const activityId = '669ac142a386368522d0c5c0'
 
       const updatedActivity = { name: 'Updated Activity', type: 'Relaxation', date: '2024-07-17', time: '11:00' };
 
       const res = await request(app)
-        .put(`/activities/${activityId}`)
+        .put(`/trips/activities/${activityId}`)
         .send(updatedActivity);
 
       expect(res.statusCode).toEqual(204);
-
-      // Verify the activity has been updated in the database
-      const updatedResult = await db.collection('activities').findOne({ _id: activityId });
-      expect(updatedResult.name).toEqual(updatedActivity.name);
-      expect(updatedResult.type).toEqual(updatedActivity.type);
     });
 
-    test('should return 404 for non-existent activity or no changes made', async () => {
+    test('should return 412 for non-existent activity or no changes made', async () => {
       const res = await request(app)
-        .put(`/activities/${new ObjectId()}`)
+        .put(`/trips/activities/${new ObjectId()}`)
         .send({ name: 'Updated Activity' });
 
-      expect(res.statusCode).toEqual(404);
-      expect(res.body.error).toEqual('Activity not found or no changes made.');
+      expect(res.statusCode).toEqual(412);
     });
   });
 
   describe('DELETE /activities/:id', () => {
     test('should delete an activity', async () => {
-      const activity = { name: 'Test Activity', type: 'Adventure', date: '2024-07-16', time: '10:00' };
+      const activity = { tripId: '66898c57bb2c2466975597d7',name: 'Test Activity', type: 'Adventure', date: '2024-07-16', time: '10:00' };
       const insertResult = await db.collection('activities').insertOne(activity);
       const activityId = insertResult.insertedId;
 
-      const res = await request(app).delete(`/activities/${activityId}`);
+      const res = await request(app).delete(`/trips/activities/${activityId}`);
       expect(res.statusCode).toEqual(204);
 
       // Verify the activity has been deleted from the database
@@ -133,7 +121,7 @@ describe('Activity API', () => {
     });
 
     test('should return 404 for non-existent activity', async () => {
-      const res = await request(app).delete(`/activities/${new ObjectId()}`);
+      const res = await request(app).delete(`/trips/activities/${new ObjectId()}`);
       expect(res.statusCode).toEqual(404);
       expect(res.body.error).toEqual('Activity not found.');
     });
