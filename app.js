@@ -9,8 +9,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongodb = require('./database/connect');
-const expressLayouts = require("express-ejs-layouts")
-const staticRoutes = require('./routes/static');
 const app = express();
 const { auth } = require('express-openid-connect');
 const { requiresAuth } = require('express-openid-connect');
@@ -32,12 +30,12 @@ app
   })
 
 
-/* ***********************
- * View Engine and Templates
- *************************/
-app.set("view engine", "ejs")
-app.use(expressLayouts)
-app.set("layout", "./layouts/layout") // not at views root
+// /* ***********************
+//  * View Engine and Templates
+//  *************************/
+// app.set("view engine", "ejs")
+// app.use(expressLayouts)
+// app.set("layout", "./layouts/layout") // not at views root
 
 
 /********************
@@ -85,21 +83,21 @@ app.get('/', (req, res) => {
 //log user in Mongodb
 app.get('/profile', requiresAuth(), async (req, res) => {
   const email = await mongodb.getDb().db('travel-buddy')
-  .collection('users')
-  .findOne({email: req.oidc.user.email});
- if (!email){
-  const userRecords = await mongodb.getDb()
-  .db('travel-buddy')
-  .collection('users');
-  const result = await userRecords.insertOne( {
-    name: req.oidc.user.name,
-    email: req.oidc.user.email,
-    password: req.oidc.user.password});
-    res.send("User created");}
-    else{
-      res.send(JSON.stringify(req.oidc.user));
-    }
-  });
+    .collection('users')
+    .findOne({email: req.oidc.user.email});
+  if (!email){
+    const userRecords = await mongodb.getDb()
+      .db('travel-buddy')
+      .collection('users');
+    const result = await userRecords.insertOne( {
+      name: req.oidc.user.name,
+      email: req.oidc.user.email,
+      password: req.oidc.user.password});
+      res.send("User created");
+  }else{
+    res.send(JSON.stringify(req.oidc.user));
+  }
+});
 
   module.exports = app;
 
