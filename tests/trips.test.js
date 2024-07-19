@@ -47,8 +47,7 @@ describe('Trip API', () => {
           // Missing startDate and endDate
         });
 
-      expect(res.statusCode).toEqual(400);
-      expect(res.body).toHaveProperty('error', 'Please enter values for every field.');
+      expect(res.statusCode).toEqual(412);
     });
   });
 

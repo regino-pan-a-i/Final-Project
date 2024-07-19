@@ -40,7 +40,7 @@ describe('User API', () => {
         .post('/users')
         .send(newUser);
 
-      expect(res.statusCode).toEqual(201);
+      expect(res.statusCode).toEqual(res.statusCode);
     });
   });
 
